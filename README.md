@@ -63,16 +63,12 @@ nodemon server
 ```
 
 ### Database
+La base de données groupomaniadb est fournie en annexe. Les tables seront créées automatiquement.
 ```
 mysql -u root -p
 Enter password: ####
 ```
 Utiliser votre mot de passe à la place de '####' et le modifier dans backend/database/db.js
-Puis créez la base de données groupomaniadb.
-
-```
-create database groupomaniadb
-```
 
 ***
 ## Création du compte administrateur

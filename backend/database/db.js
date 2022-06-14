@@ -5,7 +5,7 @@ const Sequelize = require("sequelize");
 const db = new Sequelize(
     'groupomaniadb',
     'root' ,
-    'supermdp',
+    '###',
     {dialect: 'mysql',
         host: 'localhost'}
 )

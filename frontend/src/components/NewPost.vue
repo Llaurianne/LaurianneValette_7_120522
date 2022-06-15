@@ -42,12 +42,14 @@ export default {
   emits: ['newPost'],
   methods: {
     togglePost() {
+      //Permet de fermer la fenêtre d'édition et réinitialise les informations stockées temporairement dans this.post
       this.newPostOpened = !this.newPostOpened
       this.initializePost()
     },
     initializePost() {
       this.post.title = '';
       this.post.description = '';
+      this.file='';
     },
     fileUpload () {
       this.file = this.$refs.file.files[0];
@@ -57,6 +59,7 @@ export default {
       let image = this.file
       let data
       let headers
+      //Définition du header et des datas à transmettre à l'API selon les cas avec ou sans image
       if (image) {
         post = JSON.stringify(this.post)
         data = { post, image }
@@ -74,6 +77,7 @@ export default {
           'Authorization': "Bearer " + localStorage.token
         }
       }
+      //Requête pour création du post dans la bdd
       axios({
         method: 'post',
         url: 'http://localhost:3000/api/post',

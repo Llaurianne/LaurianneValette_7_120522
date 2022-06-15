@@ -8,6 +8,7 @@
     <h1 v-if="signedUp">Connectez-vous</h1>
     <h1 v-else>Créez un compte</h1>
 
+    <!-- Formulaire de connexion ou création de compte -->
     <form @submit.prevent>
 
       <label for="email">Email</label>
@@ -26,6 +27,7 @@
 
     </form>
 
+    <!-- Possibilité de switcher entre connexion et enregistrement -->
     <p class="small" v-if="signedUp">Vous n'avez pas encore de compte?</p>
     <p class="small" v-else>Vous avez déjà un compte?</p>
     <p class="small toggle" v-if="signedUp" @click="signedUp=!signedUp">S'enregistrer.</p>
@@ -35,7 +37,6 @@
 
 <script>
 import axios from "axios";
-//import router from "@/router";
 
 export default {
   name: 'StartForm',
@@ -57,12 +58,14 @@ export default {
   emits: ['authentication'],
   methods: {
     login() {
+      //Vérification de la complétude des champs
       if (!this.user.email) {
         this.emailValidationMsg = 'Champ requis'
       }
       if (!this.user.password) {
         this.emailValidationMsg = 'Champ requis'
       }
+      //Requête login
       if (this.user.password && this.user.email) {
         axios({
           method: 'post',
@@ -75,7 +78,9 @@ export default {
             .then(response => {
               if (response.status === 200) {
                 console.log('Utilisateur connecté.')
+                //Sauvegarde du token dans le localStorage
                 localStorage.setItem('token', response.data.token)
+                //Emission d'un évènement personnalisé récupéré par Home.vue
                 this.$emit("authentication")
               }
             })
@@ -86,13 +91,16 @@ export default {
       }
     },
     signup() {
+      //Vérification de la complétude des champs
       if (!this.user.email) {
         this.emailValidationMsg = 'Champ requis'
       }
       if (!this.user.password) {
         this.emailValidationMsg = 'Champ requis'
       }
+      //Vérification de la validité de l'email et du password
       if (this.isEmailValid === 1 && this.isPasswordValid === 1) {
+        //Requête signup
         axios({
           method: 'post',
           url: 'http://localhost:3000/api/auth/signup',
@@ -114,6 +122,7 @@ export default {
       }
     },
     emailValidation () {
+      //Vérification de la validité de l'email par regex
       this.signUpError = false;
       this.loginError = false;
       if ((!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/).test(this.user.email)) && this.user.email) {
@@ -130,6 +139,7 @@ export default {
       }
     },
     passwordValidation () {
+      //Vérification de la validité du password par regex
       this.signUpError = false;
       this.loginError = false;
       const pwdRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)([-+!*$@%_\w]{8,15})$/

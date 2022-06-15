@@ -1,5 +1,5 @@
 <template>
-  <MainHeader @authentication="authentication" :page="page" :actualUserId="actualUserId"/>
+  <MainHeader @authentication="authentication"/>
   <main>
     <!-- Créer un nouveau post -->
     <NewPost @newPost="getAllPosts"/>
@@ -83,7 +83,6 @@ export default {
       userDislikes: {},
       ilike: 1,
       idislike: -1,
-      page: 'Accueil',
     }
   },
   props: {
@@ -92,9 +91,11 @@ export default {
   emits: ['authentication'],
   methods: {
     toggleEditPost() {
+      //Ouverture/fermeture de la fenêtre d'édition
       this.editPostOpened = !this.editPostOpened
     },
     getOnePost(id) {
+      //Requête pour récupérer le post à modifier
       axios({
         url: `http://localhost:3000/api/post/${id}`,
         headers: {
@@ -116,6 +117,7 @@ export default {
       let image = this.file
       let data
       let headers
+      //Définition du header et des datas à transmettre à l'API selon les cas avec ou sans image
       if (image) {
         post = JSON.stringify(this.post)
         data = { post, image }
@@ -133,6 +135,7 @@ export default {
           'Authorization': "Bearer " + localStorage.token
         }
       }
+      //Requête pour modification du post dans la bdd
       axios({
         method: 'put',
         url: `http://localhost:3000/api/post/${id}`,
@@ -147,6 +150,7 @@ export default {
       this.initializePost();
     },
     deletePost(id) {
+      //Requête suppression du post
       axios({
         method: 'delete',
         url: `http://localhost:3000/api/post/${id}`,
@@ -162,16 +166,21 @@ export default {
           .catch(error => console.log(error.message))
     },
     fileUpload () {
+      //Récupération du fichier chargé
       this.file = this.$refs.file.files[0];
     },
     initializePost() {
+      //Réinitilisation des données temporairement stockées dans this.post
       this.post.title = '';
       this.post.description = '';
+      this.file = '';
     },
     reformattedDate(timestamp) {
+      //Transformation de la date au format souhaité
       return moment(String(timestamp)).locale('fr').calendar()
     },
     isCreator(id) {
+      //Vérification de l'appartenance d'un post à l'utilisateur actuel
       return (this.actualUserId === id || this.actualUserId === 1);
     },
     updateLikes(postId, value) {
@@ -191,6 +200,7 @@ export default {
           .catch(error => console.log(error.message))
     },
     getLikes(id) {
+      //Requête pour récupérer les likes
       axios({
         url: `http://localhost:3000/api/like/${id}`,
         headers: {
@@ -207,6 +217,7 @@ export default {
           .catch(error => console.log(error.message))
     },
     getDislikes(id) {
+      //Requête pour récupérer les dislikes
       axios({
         url: `http://localhost:3000/api/like/d/${id}`,
         headers: {
@@ -223,6 +234,7 @@ export default {
           .catch(error => console.log(error.message))
     },
     getAllPosts () {
+      //Requête pour récupérer tous les posts et les afficher
       axios({
         url: 'http://localhost:3000/api/post',
         headers: {
@@ -240,6 +252,7 @@ export default {
           .catch(error => console.log(error.message))
     },
     authentication() {
+      //Emission d'un évènement personnalisé permettant de détecter la déconnexion de l'utilisation depuis Home.vue
       this.$emit("authentication")
     }
   },

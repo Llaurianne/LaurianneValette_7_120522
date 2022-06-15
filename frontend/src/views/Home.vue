@@ -23,9 +23,11 @@ export default {
   },
   methods: {
     authentication() {
+      //Vérification de l'existence d'un token dans le localStorage
       if (localStorage.length === 0) {
         console.log('Utilisateur non authentifié.')
         this.isAuthenticated = false
+        //Requête permettant de vérifier la validité du token s'il existe
       } else {
         axios({
           method: 'post',

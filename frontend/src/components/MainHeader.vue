@@ -25,13 +25,10 @@ export default {
 
     }
   },
-  props:  {
-    page: String,
-    actualUserId: Number,
-  },
   emits: ['authentication'],
   methods: {
     deconnexion() {
+      //Efface le token contenu dans localStorage et émet un évènement vers NewsFeed.vue permettant de détecter la deconnexion
       localStorage.clear()
       this.$emit('authentication')
     },
